@@ -6,11 +6,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -69,9 +72,11 @@ public class WeatherActivity extends AppCompatActivity {
     private ScrollView mWeatherLayout;
     public static final String TAG="weather";
     private ImageView mBigpicimg;
-    private SwipeRefreshLayout mSwipeRefresh;
+    public SwipeRefreshLayout mSwipeRefresh;
     private String mWeatherId;
     private String mWeather_id;
+    public DrawerLayout mDrawerlayout;
+    private Button mNavButton;
 
 
     @Override
@@ -84,6 +89,8 @@ public class WeatherActivity extends AppCompatActivity {
 
         }
         setContentView(R.layout.activity_weather);
+        mNavButton = (Button) findViewById(R.id.nav_button);
+        mDrawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mBigpicimg = (ImageView) findViewById(R.id.bing_pic_img);
         mWeatherLayout = (ScrollView) findViewById(R.id.weather_layout);
@@ -125,6 +132,12 @@ public class WeatherActivity extends AppCompatActivity {
                 requestWeather(mWeatherId);
             }
         });
+        mNavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerlayout.openDrawer(GravityCompat.START);
+            }
+        });
     }
     /*
     加载大图
@@ -157,7 +170,7 @@ public class WeatherActivity extends AppCompatActivity {
     /*
     根据天气id请求城市的天气信息
      */
-    private void requestWeather(final String weather_id) {
+    public void requestWeather(final String weather_id) {
         String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weather_id + "&key=a9c353408d8244c8a105d51684c7c531";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
